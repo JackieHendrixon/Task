@@ -8,41 +8,42 @@
 
 import UIKit
 
-class PageContentViewController: UIViewController, PlaceViewModelDelegate {
+class PageContentViewController: UIViewController {
    
-    var placeViewModel: PlaceViewModel?
+    // MARK: - Properties
+    
+    var placeModel: PlaceModel?
+    
+    // MARK: - Outlets
+    
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
-    
     @IBOutlet weak var imageLeadingConstraint: NSLayoutConstraint!
-    
     @IBOutlet weak var imageView: UIImageView!
     @IBOutlet weak var textView: UITextView!
+    
+    // MARK: - Override
     
     override func viewDidLoad() {
         super.viewDidLoad()
         activityIndicator.startAnimating()
         imageLeadingConstraint.constant = textView.textContainer.lineFragmentPadding
         textView.textContainerInset = .zero
-        // Do any additional setup after loading the view.
+        if let place = placeModel {
+        NetworkingClient.instance.fetchImage(from: place.icon) {
+            self.imageView.image = $0
+            self.textView.addSubview(self.imageView)
+            self.activityIndicator.stopAnimating()
+            self.activityIndicator.isHidden = true
+            self.excludeImage()
+        }
+        textView.text = place.description
+        }
     }
     
-    override func viewWillAppear(_ animated: Bool) {
-        
-    }
+    // MARK: - Private functions
     
     private func excludeImage(){
         let imagePath = UIBezierPath(rect: self.view.convert(imageView.frame, to: textView))
         textView.textContainer.exclusionPaths = [imagePath]
     }
-
-    func refreshViews(){
-        if let placeViewModel = placeViewModel, let image = placeViewModel.image {
-            imageView.image = image
-            textView.text = placeViewModel.description
-            activityIndicator.stopAnimating()
-            activityIndicator.isHidden = true
-            excludeImage()
-        }
-    }
-
 }

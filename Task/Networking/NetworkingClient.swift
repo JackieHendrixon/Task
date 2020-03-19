@@ -10,7 +10,12 @@ import Foundation
 import Alamofire
 
 class NetworkingClient{
+    
+    //MARK: - Instance
+    
     static let instance: NetworkingClient = NetworkingClient()
+    
+    // MARK: - Fetching functions
     
     func fetchVoivodeship(completion: @escaping ([VoivodeshipModel]?) -> () )  {
         var result: [VoivodeshipModel]?
@@ -34,7 +39,7 @@ class NetworkingClient{
     
     func fetchCities(completion: @escaping ([CityModel]?) -> () )  {
         var result: [CityModel]?
-        Alamofire.request("http://sirocco.home.pl/apkftp/testy/ios/jsons/cities?region_id=2").responseJSON { (response) in
+        Alamofire.request("http://sirocco.home.pl/apkftp/testy/ios/jsons/cities?region_id=1").responseJSON { (response) in
             switch response.result {
             case .success:
                 if let data = response.data {
@@ -65,5 +70,4 @@ class NetworkingClient{
             }
         }
     }
-    
 }

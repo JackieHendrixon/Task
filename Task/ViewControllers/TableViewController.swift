@@ -14,18 +14,21 @@ enum Type {
 }
 
 class TableViewController: UITableViewController {
-    var type: Type = .voivodeships
     
+    //MARK: - Properties
+    
+    var type: Type = .voivodeships
     private var voivodeships: [VoivodeshipModel]?
     private var cities: [CityModel]?
-    
-    
 
+    //MARK: - Override
     override func viewDidLoad() {
         super.viewDidLoad()
         refreshControl?.beginRefreshing()
         fetchData()
     }
+    
+    //MARK: - Private functions
     
     private func fetchData() {
         
@@ -37,17 +40,16 @@ class TableViewController: UITableViewController {
                 self.tableView.reloadData()
             }
         case .cities:
-            NetworkingClient.instance.fetchCities {
+            NetworkingClient.instance.fetchCities() {
                 self.cities = $0
                 self.refreshControl?.endRefreshing()
                 self.tableView.reloadData()
             }
         }
-        
     }
     
-    // MARK: - Table view data source
-
+    //MARK: - TableView dataSource
+    
     override func numberOfSections(in tableView: UITableView) -> Int {
         // #warning Incomplete implementation, return the number of sections
         return 1
